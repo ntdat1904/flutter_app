@@ -58,14 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = GeneratorPage();
-        break;
       case 1:
         page = FavoritesPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
     return LayoutBuilder(builder: (context, constraints) {
+      var appState = context.watch<MyAppState>();
+      var numberFavorites =
+          appState.favorite.isNotEmpty ? appState.favorite.length : 0;
       return Scaffold(
         body: Row(
           children: [
@@ -77,7 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 NavigationRailDestination(
                     icon: Icon(Icons.home), label: Text('Home')),
                 NavigationRailDestination(
-                    icon: Icon(Icons.favorite), label: Text('Favorites'))
+                    icon: Badge(
+                      label: Text(numberFavorites.toString()),
+                      child: Icon(Icons.favorite),
+                    ),
+                    selectedIcon: Badge(
+                      label: Text(numberFavorites.toString()),
+                      child: Icon(Icons.favorite),
+                    ),
+                    label: Text('Favorites'))
               ],
               onDestinationSelected: (value) {
                 setState(() {
